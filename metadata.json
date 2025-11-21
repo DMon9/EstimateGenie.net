@@ -1,0 +1,5 @@
+{
+  "name": "Estimate Genie",
+  "description": "An AI-powered construction and renovation quote builder that analyzes site photos/videos to provide detailed estimates, timelines, and photorealistic visualizations of the completed project.",
+  "requestFramePermissions": []
+}
