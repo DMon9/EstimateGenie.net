@@ -3,7 +3,7 @@ import { QuoteData, ImageSize, ProjectInputs } from "../types";
 
 // Helper to ensure we have a valid instance with the latest key if needed
 const getAIInstance = () => {
-  const apiKey = process.env.API_KEY;
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
   if (!apiKey) {
     console.warn("API Key not found in environment variables.");
   }
@@ -243,7 +243,8 @@ export const generateProjectVideo = async (
   }
 
   // Fetch the video using the API key
-  const response = await fetch(`${downloadLink}&key=${process.env.API_KEY}`);
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  const response = await fetch(`${downloadLink}&key=${apiKey}`);
   if (!response.ok) {
     throw new Error(`Failed to download video: ${response.statusText}`);
   }
