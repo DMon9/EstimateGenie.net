@@ -43,7 +43,7 @@ const CheckoutForm: React.FC<{
         throw new Error('You must be logged in to make a payment');
       }
 
-      const response = await fetch('/api/stripe/create-payment-intent', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/stripe/create-payment-intent`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ const CheckoutForm: React.FC<{
       if (paymentIntent.status === 'succeeded') {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const confirmResponse = await fetch('/api/stripe/confirm-upgrade', {
+          const confirmResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/stripe/confirm-upgrade`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

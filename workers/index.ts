@@ -14,7 +14,10 @@ export interface Env {
 
 const app = new Hono<{ Bindings: Env }>();
 
-app.use('/*', cors());
+app.use('/*', cors({
+  origin: ['https://400b8f2b.estimate-genie.pages.dev', 'https://estimate-genie.pages.dev', 'https://estimategenie.net'],
+  credentials: true
+}));
 
 app.get('/api/health', (c) => {
   return c.json({ status: 'ok', message: 'Cloudflare Workers API is running' });

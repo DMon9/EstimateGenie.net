@@ -26,7 +26,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin, onError
     setIsLoading(true);
     
     try {
-      const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      const endpoint = isLogin ? `${apiUrl}/api/auth/login` : `${apiUrl}/api/auth/register`;
       const payload = isLogin 
         ? { email: formData.email, password: formData.password }
         : { name: formData.name, email: formData.email, password: formData.password };

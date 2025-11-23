@@ -34,7 +34,8 @@ const App: React.FC = () => {
   React.useEffect(() => {
     const token = localStorage.getItem('authToken');
     if (token) {
-      fetch('/api/auth/user', {
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      fetch(`${apiUrl}/api/auth/user`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

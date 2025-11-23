@@ -4,7 +4,8 @@ export const sendQuoteEmail = async (email: string, data: QuoteData): Promise<bo
   console.log(`[EmailService] Sending quote to ${email}...`);
   
   try {
-    const response = await fetch('/api/email/send-quote', {
+    const apiUrl = import.meta.env.VITE_API_URL || '';
+    const response = await fetch(`${apiUrl}/api/email/send-quote`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

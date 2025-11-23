@@ -1,7 +1,7 @@
 name = "estimate-genie-api"
 main = "workers/index.ts"
 compatibility_date = "2024-11-20"
-node_compat = true
+compatibility_flags = ["nodejs_compat"]
 
 [env.production]
 name = "estimate-genie-api"
@@ -9,7 +9,7 @@ name = "estimate-genie-api"
 [[d1_databases]]
 binding = "DB"
 database_name = "estimate-genie-db"
-database_id = "YOUR_DATABASE_ID_HERE"
+database_id = "399b875a-cdbb-42d3-b792-00ff7fa85250"
 
 [vars]
 # Non-sensitive environment variables
