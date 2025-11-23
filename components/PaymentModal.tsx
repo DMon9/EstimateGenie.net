@@ -38,10 +38,16 @@ const CheckoutForm: React.FC<{
     setIsProcessing(true);
 
     try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        throw new Error('You must be logged in to make a payment');
+      }
+
       const response = await fetch('/api/stripe/create-payment-intent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({ tier: selectedTier }),
       });
@@ -79,19 +85,21 @@ const CheckoutForm: React.FC<{
             },
             body: JSON.stringify({
               paymentIntentId: paymentIntent.id,
-              tier: selectedTier,
             }),
           });
 
           if (!confirmResponse.ok) {
-            throw new Error('Failed to confirm upgrade');
+            const errorData = await confirmResponse.json();
+            throw new Error(errorData.error || 'Failed to confirm upgrade');
           }
-        }
 
-        setIsSuccess(true);
-        setTimeout(() => {
-          onPaymentComplete(selectedTier);
-        }, 1500);
+          const confirmData = await confirmResponse.json();
+          
+          setIsSuccess(true);
+          setTimeout(() => {
+            onPaymentComplete(confirmData.user.tier);
+          }, 1500);
+        }
       }
     } catch (error: any) {
       console.error('Payment error:', error);

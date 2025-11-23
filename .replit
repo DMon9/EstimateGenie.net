@@ -50,4 +50,4 @@ build = ["npm", "run", "build"]
 
 [userenv.shared]
 VITE_GEMINI_API_KEY = "${GEMINI_API_KEY}"
-VITE_STRIPE_PUBLISHABLE_KEY = "pk_test_temp_placeholder"
+VITE_STRIPE_PUBLISHABLE_KEY = "pk_test_51RIEWqENa3zBKoIjQbfwhkNr3v48thZR85jxY8t7uARH5HYJUpWIoSNC8ZVfwZCtgJHdTqryaR5AJU6JKmF0stqW00b91VZKYq"
