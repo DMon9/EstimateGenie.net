@@ -30,6 +30,31 @@ const App: React.FC = () => {
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [selectedTierForCheckout, setSelectedTierForCheckout] = useState<SubscriptionTier | null>(null);
 
+  // Rehydrate user state from stored JWT on app load
+  React.useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      fetch('/api/auth/user', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to authenticate');
+          }
+          return response.json();
+        })
+        .then(userData => {
+          setUser(userData);
+        })
+        .catch(error => {
+          console.error('Failed to rehydrate user:', error);
+          localStorage.removeItem('authToken');
+        });
+    }
+  }, []);
+
   const showNotification = (message: string, type: 'success' | 'error' | 'info') => {
     setNotification({
       id: Date.now().toString(),
@@ -103,8 +128,9 @@ const App: React.FC = () => {
     return true;
   };
 
-  const handleLogin = (loggedInUser: User) => {
+  const handleLogin = (loggedInUser: User, token: string) => {
     setUser(loggedInUser);
+    localStorage.setItem('authToken', token);
     showNotification(`Welcome back, ${loggedInUser.name}!`, 'success');
   };
 
@@ -129,13 +155,20 @@ const App: React.FC = () => {
   };
 
   // Called when PaymentModal completes successfully
-  const handlePaymentSuccess = () => {
-    if (user && selectedTierForCheckout) {
-        setUser({ ...user, tier: selectedTierForCheckout });
+  const handlePaymentSuccess = (tier: SubscriptionTier) => {
+    if (user) {
+        setUser({ ...user, tier });
         setIsPaymentOpen(false);
         setSelectedTierForCheckout(null);
-        showNotification(`Upgraded to ${selectedTierForCheckout} plan!`, 'success');
+        showNotification(`Upgraded to ${tier} plan!`, 'success');
     }
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    setQuoteData(null);
+    localStorage.removeItem('authToken');
+    showNotification('Signed out successfully', 'info');
   };
 
   return (
@@ -264,6 +297,7 @@ const App: React.FC = () => {
         isOpen={isAuthOpen} 
         onClose={() => setIsAuthOpen(false)} 
         onLogin={handleLogin}
+        onError={(error) => showNotification(error, 'error')}
       />
       <PricingModal 
         isOpen={isPricingOpen} 
@@ -276,13 +310,14 @@ const App: React.FC = () => {
         onClose={() => setIsPaymentOpen(false)}
         selectedTier={selectedTierForCheckout}
         onPaymentComplete={handlePaymentSuccess}
+        onError={(error) => showNotification(error, 'error')}
       />
       {user && (
         <UserProfile
             isOpen={isProfileOpen}
             onClose={() => setIsProfileOpen(false)}
             user={user}
-            onLogout={() => { setUser(null); setQuoteData(null); showNotification('Signed out successfully', 'info'); }}
+            onLogout={handleLogout}
             onManageSubscription={() => setIsPricingOpen(true)}
         />
       )}

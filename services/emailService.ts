@@ -1,40 +1,31 @@
 import { QuoteData } from '../types';
 
 export const sendQuoteEmail = async (email: string, data: QuoteData): Promise<boolean> => {
-  console.log(`[EmailService] Initiating send to ${email}...`);
+  console.log(`[EmailService] Sending quote to ${email}...`);
   
-  // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 1500));
+  try {
+    const response = await fetch('/api/email/send-quote', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        quoteData: data,
+      }),
+    });
 
-  // Construct email content simulation
-  const emailContent = `
-    TO: ${email}
-    FROM: no-reply@estimategenie.app
-    SUBJECT: Your Estimate Genie Quote: ${data.projectName}
-    ----------------------------------------------------
-    Hi there,
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to send email');
+    }
 
-    Your AI-powered estimate is ready!
-
-    PROJECT SUMMARY
-    Name: ${data.projectName}
-    Total Estimate: ${data.totalEstimatedCostMin.toLocaleString()} - ${data.totalEstimatedCostMax.toLocaleString()} ${data.currency}
+    const result = await response.json();
+    console.log(`[EmailService] Email sent successfully to ${email}`, result);
     
-    DETAILS
-    ${data.summary}
-
-    TIMELINE
-    Total Phases: ${data.timeline.length}
-    
-    View your full interactive quote, visualizations, and Veo video tours here:
-    https://estimategenie.app/quotes/${btoa(data.projectName + Date.now()).substring(0, 12)}
-
-    Best regards,
-    The Estimate Genie Team
-  `;
-
-  console.log(emailContent);
-  console.log(`[EmailService] Email sent successfully to ${email}`);
-  
-  return true;
+    return true;
+  } catch (error) {
+    console.error('[EmailService] Failed to send email:', error);
+    throw error;
+  }
 };

@@ -6,10 +6,11 @@ import { User } from '../types';
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLogin: (user: User) => void;
+  onLogin: (user: User, token: string) => void;
+  onError: (message: string) => void;
 }
 
-const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
+const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin, onError }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -20,24 +21,39 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      const mockUser: User = {
-        name: formData.name || (formData.email.split('@')[0]),
-        email: formData.email,
-        tier: 'free',
-        joinedDate: new Date().toLocaleDateString(),
-        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${formData.email}`,
-        pdfDownloads: 0
-      };
-      onLogin(mockUser);
-      setIsLoading(false);
+    try {
+      const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
+      const payload = isLogin 
+        ? { email: formData.email, password: formData.password }
+        : { name: formData.name, email: formData.email, password: formData.password };
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Authentication failed');
+      }
+
+      onLogin(data.user, data.token);
       onClose();
-    }, 1500);
+      setFormData({ name: '', email: '', password: '' });
+    } catch (error: any) {
+      console.error('Authentication error:', error);
+      onError(error.message || 'Authentication failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
