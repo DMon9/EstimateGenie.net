@@ -8,9 +8,16 @@
     "dev:server": "tsx watch server/index.ts",
     "dev:all": "concurrently \"npm run dev\" \"npm run dev:server\"",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy:workers": "wrangler deploy",
+    "deploy:pages": "wrangler pages deploy dist --project-name=estimate-genie",
+    "d1:create": "wrangler d1 create estimate-genie-db",
+    "d1:migrate": "wrangler d1 execute estimate-genie-db --file=./migrations/0001_initial_schema.sql",
+    "d1:query": "wrangler d1 execute estimate-genie-db",
+    "cf:login": "wrangler login"
   },
   "dependencies": {
+    "@cloudflare/workers-types": "^4.20251121.0",
     "@google/genai": "^1.30.0",
     "@stripe/react-stripe-js": "^5.4.0",
     "@stripe/stripe-js": "^8.5.2",
@@ -25,6 +32,7 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
+    "hono": "^4.10.6",
     "html2canvas": "1.4.1",
     "jsonwebtoken": "^9.0.2",
     "jspdf": "2.5.1",
@@ -34,7 +42,8 @@
     "recharts": "^3.4.1",
     "resend": "^6.5.2",
     "stripe": "^20.0.0",
-    "tsx": "^4.20.6"
+    "tsx": "^4.20.6",
+    "wrangler": "^4.50.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

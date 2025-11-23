@@ -1,0 +1,21 @@
+name = "estimate-genie-api"
+main = "workers/index.ts"
+compatibility_date = "2024-11-20"
+node_compat = true
+
+[env.production]
+name = "estimate-genie-api"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "estimate-genie-db"
+database_id = "YOUR_DATABASE_ID_HERE"
+
+[vars]
+# Non-sensitive environment variables
+
+# Secrets (set via wrangler secret put):
+# JWT_SECRET
+# GEMINI_API_KEY
+# RESEND_API_KEY
+# STRIPE_SECRET_KEY
