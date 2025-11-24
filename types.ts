@@ -56,4 +56,5 @@ export interface User {
   avatar?: string;
   joinedDate: string;
   pdfDownloads: number;
+  quoteBreakdowns: number;
 }

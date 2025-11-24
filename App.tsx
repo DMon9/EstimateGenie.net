@@ -67,7 +67,50 @@ const App: React.FC = () => {
   const handleAnalyze = async (fileData: FileData, inputs: ProjectInputs) => {
     setIsLoading(true);
     setProjectDescription(inputs.prompt);
+    
     try {
+      // Check quote limit for free users
+      if (user && user.tier === 'free' && user.quoteBreakdowns >= 3) {
+        setIsPricingOpen(true);
+        showNotification('You have reached your free quote limit. Upgrade to Pro for unlimited quotes.', 'error');
+        return;
+      }
+
+      // If user is logged in, track the quote usage
+      if (user) {
+        const apiUrl = import.meta.env.VITE_API_URL || '';
+        const response = await fetch(`${apiUrl}/api/auth/increment-quote`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          if (response.status === 403) {
+            setIsPricingOpen(true);
+            showNotification(errorData.error, 'error');
+            return;
+          }
+          throw new Error(errorData.error || 'Failed to track usage');
+        }
+
+        const usageData = await response.json();
+        
+        // Update user state with new count
+        setUser(prevUser => prevUser ? {
+          ...prevUser,
+          quoteBreakdowns: usageData.quoteBreakdowns
+        } : null);
+
+        // Show remaining quotes for free users
+        if (user.tier === 'free' && usageData.remaining >= 0) {
+          showNotification(`${usageData.remaining} free quote${usageData.remaining !== 1 ? 's' : ''} remaining`, 'info');
+        }
+      }
+      
       const data = await analyzeProject(fileData.base64, fileData.mimeType, inputs);
       setQuoteData(data);
       

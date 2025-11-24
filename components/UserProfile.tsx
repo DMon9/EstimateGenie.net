@@ -44,6 +44,20 @@ const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose, user, onLogo
 
           <div className="space-y-2">
             <div className="p-4 rounded-xl border border-slate-100 bg-slate-50 flex items-center gap-4">
+              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                <FileText className="text-blue-600" size={20} />
+              </div>
+              <div className="flex-1">
+                <p className="font-medium text-slate-900">Quote Breakdowns</p>
+                <p className="text-sm text-slate-500">
+                  {user.tier === 'free' 
+                    ? `${user.quoteBreakdowns || 0} / 3 used this month`
+                    : `${user.quoteBreakdowns || 0} generated (unlimited)`
+                  }
+                </p>
+              </div>
+            </div>
+            <div className="p-4 rounded-xl border border-slate-100 bg-slate-50 flex items-center gap-4">
                 <div className="bg-white p-2 rounded-lg shadow-sm text-slate-600">
                     <Shield size={20} />
                 </div>
