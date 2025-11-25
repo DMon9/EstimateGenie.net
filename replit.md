@@ -1,9 +1,11 @@
 # Estimate Genie
 
 ## Overview
+
 Estimate Genie is an AI-powered construction/project estimation application built with React, TypeScript, Vite, and Express. It uses Google's Gemini API to analyze project images and generate detailed cost estimates, timelines, and material breakdowns, with real integrations for authentication, email, and payment processing.
 
 ## Project State
+
 - **Status**: Full-stack application with real API integrations
 - **Last Updated**: November 23, 2025
 - **Framework**: React 19.2.0 with TypeScript, Vite 6.2.0, Express backend
@@ -11,6 +13,22 @@ Estimate Genie is an AI-powered construction/project estimation application buil
 - **Deployment**: Configured for autoscale deployment
 
 ## Recent Changes
+
+- November 25, 2025: **Added Replit + VS Code Integration**
+  - Created comprehensive integration guide (REPLIT_VSCODE_INTEGRATION.md)
+  - Configured dual-environment workflow
+  - Added Git synchronization strategy
+  - Set up API testing tools configuration
+  - Local development now primary, Replit as cloud backup
+  - Added recommended VS Code extensions
+
+- November 23, 2025: **Fixed Account Creation & Quote Limits**
+  - Fixed email validation regex pattern
+  - Added password and name validation
+  - Implemented 3-quote limit for free users
+  - Added quote_breakdowns tracking to database
+  - Created migration for quote limit feature
+
 - November 23, 2025: **Converted from mock services to real integrations**
   - Added Express backend (port 3001) with JWT authentication
   - Integrated Resend for real email delivery
@@ -28,7 +46,9 @@ Estimate Genie is an AI-powered construction/project estimation application buil
   - Configured deployment with build and preview commands
 
 ## Tech Stack
+
 ### Frontend
+
 - **Framework**: React 19.2.0, TypeScript 5.8.2, Vite 6.2.0
 - **AI/ML**: Google Gemini API (@google/genai)
 - **Payment**: Stripe.js (@stripe/stripe-js, @stripe/react-stripe-js)
@@ -37,6 +57,7 @@ Estimate Genie is an AI-powered construction/project estimation application buil
 - **Icons**: Lucide React 0.554.0
 
 ### Backend
+
 - **Runtime**: Node.js with TypeScript (tsx)
 - **Framework**: Express 5.1.0
 - **Database**: SQLite (better-sqlite3)
@@ -47,6 +68,7 @@ Estimate Genie is an AI-powered construction/project estimation application buil
 ## Project Architecture
 
 ### Directory Structure
+
 ```
 /
 ├── components/          # React components
@@ -71,6 +93,7 @@ Estimate Genie is an AI-powered construction/project estimation application buil
 ```
 
 ### Key Features
+
 1. **User Authentication**: JWT-based auth with SQLite user storage
 2. **Image-based Analysis**: Upload project images for AI analysis
 3. **Cost Estimation**: AI-generated cost breakdowns with min/max ranges
@@ -82,6 +105,7 @@ Estimate Genie is an AI-powered construction/project estimation application buil
 9. **Data Visualization**: Charts and graphs for cost breakdowns
 
 ### API Endpoints
+
 - **POST /api/auth/register** - Create new user account
 - **POST /api/auth/login** - Login and receive JWT token
 - **GET /api/auth/user** - Get authenticated user data (requires JWT)
@@ -90,6 +114,7 @@ Estimate Genie is an AI-powered construction/project estimation application buil
 - **POST /api/stripe/confirm-upgrade** - Confirm payment and upgrade tier (requires JWT)
 
 ### Database Schema
+
 ```sql
 CREATE TABLE users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -104,17 +129,21 @@ CREATE TABLE users (
 ```
 
 ### Environment Variables & Secrets
+
 **Required Secrets** (stored in Replit Secrets):
+
 - **GEMINI_API_KEY**: Google Gemini API key for AI analysis
 - **JWT_SECRET**: Secret key for signing JWT tokens
 - **RESEND_API_KEY**: Resend API key for email delivery
 - **STRIPE_SECRET_KEY**: Stripe secret key (backend only - never exposed to client)
 
 **Environment Variables**:
+
 - **VITE_GEMINI_API_KEY**: Mapped from GEMINI_API_KEY via .env.local (client-side)
 - **VITE_STRIPE_PUBLISHABLE_KEY**: Stripe publishable key (client-side, safe to expose)
 
 **Security Notes**:
+
 - Stripe has two keys: secret key (backend only) and publishable key (frontend safe)
 - JWT tokens stored in localStorage and included in Authorization headers
 - Passwords hashed with bcrypt (10 rounds) before storage
@@ -123,12 +152,15 @@ CREATE TABLE users (
 ## Development
 
 ### Running Locally
+
 The app automatically starts both frontend and backend via workflow:
+
 - Command: `npm run dev:all`
 - Frontend Port: 5000 (webview)
 - Backend Port: 3001 (proxied via Vite)
 
 ### Manual Commands
+
 ```bash
 npm install            # Install dependencies
 npm run dev:all        # Start both frontend and backend
@@ -139,21 +171,27 @@ npm run preview        # Preview production build
 ```
 
 ### Database Management
+
 Database file: `users.db` (created automatically on first run)
+
 - Location: Project root directory
 - Schema auto-creates on server startup
 - No migrations needed for current schema
 
 ## Deployment
+
 Configured for Replit autoscale deployment:
+
 - Build: `npm run build`
 - Run: `npx vite preview --port 5000 --host 0.0.0.0`
 - Note: Backend deployment config needs to be added separately
 
 ## User Preferences
+
 None specified yet.
 
 ## Notes
+
 - Frontend and backend run concurrently in development
 - Vite proxy routes `/api/*` requests to backend (localhost:3001)
 - Email sending requires valid Resend API key

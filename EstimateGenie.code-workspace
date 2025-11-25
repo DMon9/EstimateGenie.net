@@ -1,0 +1,93 @@
+{
+    "folders": [
+        {
+            "path": ".",
+            "name": "EstimateGenie"
+        }
+    ],
+    "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": true
+        },
+        "[typescript]": {
+            "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[typescriptreact]": {
+            "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[json]": {
+            "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "files.exclude": {
+            "node_modules": true,
+            ".wrangler": true,
+            "dist": false,
+            ".next": true
+        },
+        "search.exclude": {
+            "node_modules": true,
+            ".wrangler": true,
+            "dist": true
+        },
+        "typescript.tsdk": "node_modules/typescript/lib",
+        "typescript.enablePromptUseWorkspaceTsdk": true,
+        "typescript.preferences.autoImportFileExcludePatterns": [
+            "**/node_modules/**/*"
+        ]
+    },
+    "extensions": {
+        "recommendations": [
+            "dsznajder.es7-react-js-snippets",
+            "dbaeumer.vscode-eslint",
+            "esbenp.prettier-vscode",
+            "rangav.vscode-thunder-client",
+            "humao.rest-client",
+            "alexcvzz.vscode-sqlite",
+            "eamodio.gitlens",
+            "GitHub.copilot",
+            "ms-vscode.remote-explorer"
+        ]
+    },
+    "launch": {
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "name": "Debug Backend",
+                "type": "node",
+                "request": "launch",
+                "program": "${workspaceFolder}/node_modules/tsx/esm/index.mjs",
+                "args": [
+                    "server/index.ts"
+                ],
+                "cwd": "${workspaceFolder}",
+                "console": "integratedTerminal",
+                "env": {
+                    "NODE_ENV": "development"
+                }
+            },
+            {
+                "name": "Debug Frontend",
+                "type": "chrome",
+                "request": "launch",
+                "url": "http://localhost:5000",
+                "webRoot": "${workspaceFolder}",
+                "sourceMapPathOverride": {
+                    "${webRoot}/*": "${workspaceFolder}/*"
+                }
+            },
+            {
+                "name": "Debug Both",
+                "type": "node",
+                "request": "launch",
+                "program": "${workspaceFolder}/node_modules/.bin/concurrently",
+                "args": [
+                    "\"npm run dev\"",
+                    "\"npm run dev:server\""
+                ],
+                "console": "integratedTerminal"
+            }
+        ]
+    }
+}
