@@ -3,6 +3,7 @@
 ## 🚀 Getting Started
 
 ### First Time Setup
+
 ```bash
 # Windows
 setup.bat
@@ -13,6 +14,7 @@ chmod +x setup.sh
 ```
 
 ### Daily Development
+
 ```bash
 npm run dev:all
 # Frontend: http://localhost:5000
@@ -32,6 +34,7 @@ npm run dev:all
 ## 🔧 Environment Variables
 
 ### Frontend (.env.local)
+
 ```
 VITE_API_URL=http://localhost:3001
 VITE_GEMINI_API_KEY=your_key
@@ -39,6 +42,7 @@ VITE_STRIPE_PUBLISHABLE_KEY=pk_test_...
 ```
 
 ### Backend (.env)
+
 ```
 JWT_SECRET=your-secret
 GEMINI_API_KEY=your_key
@@ -49,10 +53,12 @@ STRIPE_SECRET_KEY=sk_test_...
 ## 🧪 Testing
 
 ### Test Account
-- Email: test@example.com
+
+- Email: <test@example.com>
 - Password: password123
 
 ### Test Stripe
+
 - Card: 4242 4242 4242 4242
 - Exp: Any future date
 - CVC: Any 3 digits
@@ -71,13 +77,14 @@ npm run deploy:pages    # Deploy frontend
 
 ## 🌐 Live URLs
 
-- **Dev Frontend**: http://localhost:5000
-- **Dev Backend**: http://localhost:3001
-- **Production**: https://976ea7ff.estimate-genie.pages.dev
+- **Dev Frontend**: <http://localhost:5000>
+- **Dev Backend**: <http://localhost:3001>
+- **Production**: <https://976ea7ff.estimate-genie.pages.dev>
 
 ## 🐛 Common Issues
 
 ### Port already in use
+
 ```bash
 # Kill process on port 5000 (macOS/Linux)
 lsof -i :5000 | grep LISTEN | awk '{print $2}' | xargs kill -9
@@ -87,12 +94,14 @@ npm run dev -- --port 5001
 ```
 
 ### Module not found
+
 ```bash
 rm -rf node_modules package-lock.json
 npm install
 ```
 
 ### Database issues
+
 ```bash
 rm users.db
 npm run dev:server

@@ -1,4 +1,4 @@
-# 🎉 Replit + VS Code Integration - Setup Complete!
+# 🎉 Replit + VS Code Integration - Setup Complete
 
 ## ✅ What's Been Set Up
 
@@ -59,6 +59,7 @@ Your EstimateGenie project now has complete integration between Replit and VS Co
 ### For Local Development (VS Code - Recommended)
 
 **Step 1: Initial Setup**
+
 ```bash
 # Windows
 setup.bat
@@ -69,27 +70,33 @@ chmod +x setup.sh
 ```
 
 **Step 2: Open in VS Code**
+
 - File → Open Workspace from File → `EstimateGenie.code-workspace`
 - Install recommended extensions when prompted
 
 **Step 3: Start Development**
+
 ```bash
 npm run dev:all
 ```
-- Frontend: http://localhost:5000
-- Backend: http://localhost:3001
+
+- Frontend: <http://localhost:5000>
+- Backend: <http://localhost:3001>
 
 ### For Cloud Development (Replit)
 
 **Step 1: Import to Replit**
+
 - Go to Replit.com → Create → Import from GitHub
 - Paste: `https://github.com/DMon9/EstimateGenie.net.git`
 
 **Step 2: Add Secrets**
+
 - Click Secrets (lock icon)
 - Add: JWT_SECRET, GEMINI_API_KEY, RESEND_API_KEY, STRIPE_SECRET_KEY
 
 **Step 3: Run**
+
 - Click "Run" button
 
 ## 📚 Documentation Structure
@@ -141,6 +148,7 @@ npm run deploy:pages     # Frontend
 ## 🔐 Environment Variables
 
 ### Frontend (.env.local)
+
 ```env
 VITE_API_URL=http://localhost:3001
 VITE_GEMINI_API_KEY=your_key_here
@@ -148,6 +156,7 @@ VITE_STRIPE_PUBLISHABLE_KEY=pk_test_...
 ```
 
 ### Backend (.env)
+
 ```env
 JWT_SECRET=your-secret-dev
 GEMINI_API_KEY=your_key_here
@@ -171,19 +180,21 @@ When you open the workspace, VS Code will recommend:
 
 ### Live Services ✅
 
-- **Frontend**: https://976ea7ff.estimate-genie.pages.dev
-- **Backend**: https://estimate-genie-api.thesportsdugout.workers.dev
+- **Frontend**: <https://976ea7ff.estimate-genie.pages.dev>
+- **Backend**: <https://estimate-genie-api.thesportsdugout.workers.dev>
 - **Database**: Cloudflare D1 (estimate-genie-db)
 
 ### Configured Secrets ✅
 
 **Workers (Backend)**:
+
 - ✅ JWT_SECRET
 - ✅ GEMINI_API_KEY
 - ✅ RESEND_API_KEY
 - ✅ STRIPE_SECRET_KEY
 
 **Pages (Frontend)**:
+
 - ✅ VITE_API_URL
 - ✅ VITE_GEMINI_API_KEY
 - ✅ VITE_STRIPE_PUBLISHABLE_KEY
@@ -214,12 +225,14 @@ When you open the workspace, VS Code will recommend:
 ## 🆘 Quick Troubleshooting
 
 ### "Port already in use"
+
 ```bash
 # Find and kill process
 lsof -i :5000 | grep LISTEN | awk '{print $2}' | xargs kill -9
 ```
 
 ### "Cannot find module"
+
 ```bash
 rm -rf node_modules package-lock.json
 npm install
@@ -227,11 +240,13 @@ npm run dev:all
 ```
 
 ### "API connection failed"
+
 - Check .env has all required secrets
 - Ensure backend is running: `npm run dev:server`
 - Verify VITE_API_URL in .env.local
 
 ### "Database locked"
+
 ```bash
 rm users.db
 npm run dev:server
@@ -247,17 +262,20 @@ npm run dev:server
 ## 🎓 Learning Resources
 
 ### Git Workflow
+
 - Create branches for features: `git checkout -b feature/name`
 - Commit frequently: `git commit -m "description"`
 - Push to GitHub: `git push origin feature/name`
 - Create Pull Requests for review
 
 ### API Testing
+
 - Use Thunder Client extension (VS Code)
 - Or use REST Client extension with .rest files
 - Test endpoints locally before deploying
 
 ### Debugging
+
 - VS Code debug configs available for Backend and Frontend
 - Press F5 to start debugging
 - Browser DevTools for frontend issues
@@ -279,16 +297,17 @@ npm run dev:server
 
 4. **Start development**
    - `npm run dev:all`
-   - Visit http://localhost:5000
+   - Visit <http://localhost:5000>
 
 5. **Create your first commit**
    - `git add .`
    - `git commit -m "initial setup"`
    - `git push origin main`
 
-## 🏆 You're All Set!
+## 🏆 You're All Set
 
 Your development environment is now fully configured for:
+
 - ✅ Local development with VS Code
 - ✅ Cloud development with Replit
 - ✅ Git synchronization
