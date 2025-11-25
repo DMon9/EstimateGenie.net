@@ -79,6 +79,8 @@ const App: React.FC = () => {
       // If user is logged in, track the quote usage
       if (user) {
         const apiUrl = import.meta.env.VITE_API_URL || '';
+        console.log("[App] Incrementing quote usage at:", `${apiUrl}/api/auth/increment-quote`);
+        
         const response = await fetch(`${apiUrl}/api/auth/increment-quote`, {
           method: 'POST',
           headers: {
@@ -87,17 +89,22 @@ const App: React.FC = () => {
           },
         });
 
+        console.log("[App] Increment quote response status:", response.status);
+
         if (!response.ok) {
-          const errorData = await response.json();
+          const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+          console.error("[App] Increment quote failed:", errorData);
+          
           if (response.status === 403) {
             setIsPricingOpen(true);
-            showNotification(errorData.error, 'error');
+            showNotification(errorData.error || 'Quote limit reached', 'error');
             return;
           }
           throw new Error(errorData.error || 'Failed to track usage');
         }
 
         const usageData = await response.json();
+        console.log("[App] Updated quote usage:", usageData);
         
         // Update user state with new count
         setUser(prevUser => prevUser ? {
@@ -111,18 +118,26 @@ const App: React.FC = () => {
         }
       }
       
+      console.log("[App] Starting Gemini analysis...");
       const data = await analyzeProject(fileData.base64, fileData.mimeType, inputs);
+      console.log("[App] Analysis complete, displaying quote");
       setQuoteData(data);
       
       // Auto-send email if user is logged in
       if (user) {
         showNotification(`Generating email summary for ${user.email}...`, 'info');
-        await sendQuoteEmail(user.email, data);
-        showNotification(`Estimate summary sent to ${user.email}`, 'success');
+        try {
+          await sendQuoteEmail(user.email, data);
+          showNotification(`Estimate summary sent to ${user.email}`, 'success');
+        } catch (emailError) {
+          console.error("[App] Email send failed:", emailError);
+          showNotification("Quote generated but email could not be sent.", 'warning');
+        }
       }
     } catch (error) {
-      console.error("Analysis failed:", error);
-      showNotification("Analysis failed. Please check your API key configuration and try again.", 'error');
+      console.error("[App] Analysis failed:", error);
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      showNotification(`Analysis failed: ${errorMessage}`, 'error');
     } finally {
       setIsLoading(false);
     }

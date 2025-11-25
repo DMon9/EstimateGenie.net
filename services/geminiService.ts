@@ -98,20 +98,58 @@ export const analyzeProject = async (
     },
   ];
 
-  const response = await ai.models.generateContent({
-    model: "gemini-3-pro-preview",
-    contents: { parts },
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: quoteSchema,
-    },
-  });
+  try {
+    console.log("[Gemini] Starting quote analysis...");
+    console.log("[Gemini] Image size:", base64Data.length, "bytes");
+    
+    // Create abort controller for timeout (30 seconds)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-  if (!response.text) {
-    throw new Error("No response from Gemini");
+    const response = await Promise.race([
+      ai.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: { parts },
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: quoteSchema,
+        },
+      }),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error("Quote generation timed out after 30 seconds")), 30000)
+      )
+    ]);
+
+    clearTimeout(timeoutId);
+
+    if (!response || !response.text) {
+      console.error("[Gemini] No response text received");
+      throw new Error("No response from Gemini API");
+    }
+
+    console.log("[Gemini] Received response, parsing JSON...");
+    const result = JSON.parse(response.text) as QuoteData;
+    console.log("[Gemini] Quote analysis completed successfully");
+    
+    return result;
+  } catch (error) {
+    console.error("[Gemini] Analysis error:", error);
+    
+    if (error instanceof Error) {
+      if (error.message.includes("timed out")) {
+        throw new Error("Quote generation took too long. Please try with a simpler image or contact support.");
+      }
+      if (error.message.includes("JSON")) {
+        throw new Error("Failed to parse quote data. The API response was invalid.");
+      }
+      if (error.message.includes("API key")) {
+        throw new Error("API key configuration error. Please contact support.");
+      }
+      throw new Error(`Quote generation failed: ${error.message}`);
+    }
+    
+    throw new Error("Quote generation failed. Please try again.");
   }
-
-  return JSON.parse(response.text) as QuoteData;
 };
 
 export const generateVisualization = async (
